@@ -1,1 +1,1 @@
-Bash Unity test framework.
+Bash Unity testing framework.
