@@ -1,0 +1,9 @@
+. ./bunity
+
+setup
+assert_equals "0" "0"
+assert_not_equals "1" "asdfjajsdfjajdflkajfkjak nadç[asdfu0934urofm  djfasdlkj"
+assert_not_empty "dljfkakfjajflkajdflajkf 4oqi uqnd=	ujdnlhó4uy nvmv "
+teardown
+
+exit 0
