@@ -1,17 +1,24 @@
 . ./bunity
 
+function avaliar {
+	local teste="${1}"
+	local mensagem="${2}"
+	test "${teste}"
+	if [[ ${?} == 0 ]]; then
+		echo -n '.'
+	else
+		echo -e "F\n${mensagem}"
+		exit 1
+	fi
+}
+
 function test_setup {
 	local path_original="${PATH}"
 	local esperado="${PATH}:."
 	setup
 	local obtido="${PATH}"
 	export PATH="${path_original}"
-	if [[ "${esperado}" == "${obtido}" ]]; then
-		echo -n '.'
-	else
-		echo -e "F\n${FUNCNAME}: não acrescentou a pasta corrente ao PATH desta sessão."
-		exit 1
-	fi
+	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: não acrescentou a pasta corrente ao PATH desta sessão."
 }
 
 function test_teardown {
@@ -22,41 +29,22 @@ function test_teardown {
 	teardown >/dev/null
 	local obtido="${PATH}"
 	export PATH="${path_salvo}"
-	if [[ "${esperado}" == "${obtido}" ]]; then
-		echo -n '.'
-	else
-		echo -e "F\n${FUNCNAME}: esperava o PATH [${esperado}], mas obtive [${obtido}]."
-		exit 1
-	fi
+	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava o PATH [${esperado}], mas obtive [${obtido}]."
 
 	local esperado="$(echo -e '\nOK')"
 	local obtido=$(teardown)
 	export PATH="${path_salvo}"
-	if [[ "${esperado}" == "${obtido}" ]]; then
-		echo -n '.'
-	else
-		echo -e "F\n${FUNCNAME}: esperava a mensagem de retorno [${esperado}] mas obtive [${obtido}]."
-		exit 1
-	fi
+	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava a mensagem de retorno [${esperado}] mas obtive [${obtido}]."
 }
 
 function test_assert_equals {
 	local esperado="$(echo -e "F\ntest_assert_equals: Esperava [1] mas obtive [2].")"
 	local obtido="$(assert_equals '1' '2' 2>&1)"
-	if [[ "${esperado}" == "${obtido}" ]]; then
-		echo -n '.'
-	else
-		echo -e "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
-		exit 1
-	fi
+	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
+	
 	local esperado="."
 	local obtido="$(assert_equals '1' '1' 2>&1)"
-	if [[ "${esperado}" == "${obtido}" ]]; then
-		echo -n '.'
-	else
-		echo -e "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
-		exit 1
-	fi
+	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
 }
 
 
