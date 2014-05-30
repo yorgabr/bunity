@@ -1,19 +1,19 @@
 function setup {
-	path_original="${PATH}"
+	the_path="${PATH}"
 	export PATH="${PATH}:."
 }
 
 function teardown {
 	echo -e '\nOK'
-	export PATH="${path_original}"
+	export PATH="${the_path}"
 }
 
 function assert_equals {
 	if [[ "$1" == "$2" ]]; then
 		echo -n '.'
 	else
-		local quem_me_chamou="${FUNCNAME[1]}"
-		echo -e "F\n${quem_me_chamou}: Esperava [$1] mas obtive [$2]."
+		local who_called_me="${FUNCNAME[1]}"
+		echo -e "F\n${who_called_me}: expected [$1], but got [$2]."
 		exit 1
 	fi
 }

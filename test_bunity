@@ -1,50 +1,50 @@
 . ./bunity
 
-function avaliar {
-	local teste="${1}"
-	local mensagem="${2}"
-	test "${teste}"
+function evaluate {
+	local the_test="${1}"
+	local the_message="${2}"
+	test "${the_test}"
 	if [[ ${?} == 0 ]]; then
 		echo -n '.'
 	else
-		echo -e "F\n${mensagem}"
+		echo -e "F\n${the_message}"
 		exit 1
 	fi
 }
 
 function test_setup {
-	local path_original="${PATH}"
-	local esperado="${PATH}:."
+	local the_path="${PATH}"
+	local expected="${PATH}:."
 	setup
-	local obtido="${PATH}"
-	export PATH="${path_original}"
-	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: não acrescentou a pasta corrente ao PATH desta sessão."
+	local obtained="${PATH}"
+	export PATH="${the_path}"
+	evaluate "'${expected}' == '${obtained}'" "F\n${FUNCNAME}: it can't add this folder to its PATH section."
 }
 
 function test_teardown {
 	local path_salvo="${PATH}"
-	path_original="${path_salvo}"
-	local esperado="${path_original}"
+	the_path="${path_salvo}"
+	local expected="${the_path}"
 	export PATH="blablabla"
 	teardown >/dev/null
-	local obtido="${PATH}"
+	local obtained="${PATH}"
 	export PATH="${path_salvo}"
-	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava o PATH [${esperado}], mas obtive [${obtido}]."
+	evaluate "'${expected}' == '${obtained}'" "F\n${FUNCNAME}: expected PATH equals to [${expected}], but got [${obtained}]."
 
-	local esperado="$(echo -e '\nOK')"
-	local obtido=$(teardown)
+	local expected="$(echo -e '\nOK')"
+	local obtained=$(teardown)
 	export PATH="${path_salvo}"
-	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava a mensagem de retorno [${esperado}] mas obtive [${obtido}]."
+	evaluate "'${expected}' == '${obtained}'" "F\n${FUNCNAME}: expected return message as [${expected}], but got [${obtained}]."
 }
 
 function test_assert_equals {
-	local esperado="$(echo -e "F\ntest_assert_equals: Esperava [1] mas obtive [2].")"
-	local obtido="$(assert_equals '1' '2' 2>&1)"
-	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
+	local expected="$(echo -e "F\ntest_assert_equals: expected [1], but got [2].")"
+	local obtained="$(assert_equals '1' '2' 2>&1)"
+	evaluate "'${expected}' == '${obtained}'" "F\n${FUNCNAME}: expected return message as [${expected}], but got [${obtained}]."
 	
-	local esperado="."
-	local obtido="$(assert_equals '1' '1' 2>&1)"
-	avaliar "'${esperado}' == '${obtido}'" "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
+	local expected="."
+	local obtained="$(assert_equals '1' '1' 2>&1)"
+	evaluate "'${expected}' == '${obtained}'" "F\n${FUNCNAME}: expected return message as [${expected}], but got [${obtained}]."
 }
 
 
