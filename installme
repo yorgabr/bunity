@@ -1,6 +1,6 @@
 #!/bin/bash
 
-executaveis="bunity"
-cp -f ${executaveis} ~/bin/.
+executables="bunity"
+cp -f ${executables} ~/bin/.
 
 exit 0
