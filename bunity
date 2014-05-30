@@ -17,24 +17,3 @@ function assert_equals {
 		exit 1
 	fi
 }
-
-function assert_not_equals {
-	if [[ "$1" != "$2" ]]; then
-		echo -n '.'
-	else
-		local quem_me_chamou="${FUNCNAME[1]}"
-		echo -e "F\n${quem_me_chamou}: [$1] deveria ser diferente de [$2]."
-		exit 1
-	fi
-}
-
-function assert_not_empty {
-	if [[ -n "$1" ]]; then
-		echo -n '.'
-	else
-		local quem_me_chamou="${FUNCNAME[1]}"
-		echo -e "F\n${quem_me_chamou}: Não vazio."
-		exit 1
-	fi
-}
-

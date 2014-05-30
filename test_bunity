@@ -1,9 +1,68 @@
 . ./bunity
 
-setup
-assert_equals "0" "0"
-assert_not_equals "1" "asdfjajsdfjajdflkajfkjak nadç[asdfu0934urofm  djfasdlkj"
-assert_not_empty "dljfkakfjajflkajdflajkf 4oqi uqnd=	ujdnlhó4uy nvmv "
-teardown
+function test_setup {
+	local path_original="${PATH}"
+	local esperado="${PATH}:."
+	setup
+	local obtido="${PATH}"
+	export PATH="${path_original}"
+	if [[ "${esperado}" == "${obtido}" ]]; then
+		echo -n '.'
+	else
+		echo -e "F\n${FUNCNAME}: não acrescentou a pasta corrente ao PATH desta sessão."
+		exit 1
+	fi
+}
 
+function test_teardown {
+	local path_salvo="${PATH}"
+	path_original="${path_salvo}"
+	local esperado="${path_original}"
+	export PATH="blablabla"
+	teardown >/dev/null
+	local obtido="${PATH}"
+	export PATH="${path_salvo}"
+	if [[ "${esperado}" == "${obtido}" ]]; then
+		echo -n '.'
+	else
+		echo -e "F\n${FUNCNAME}: esperava o PATH [${esperado}], mas obtive [${obtido}]."
+		exit 1
+	fi
+
+	local esperado="$(echo -e '\nOK')"
+	local obtido=$(teardown)
+	export PATH="${path_salvo}"
+	if [[ "${esperado}" == "${obtido}" ]]; then
+		echo -n '.'
+	else
+		echo -e "F\n${FUNCNAME}: esperava a mensagem de retorno [${esperado}] mas obtive [${obtido}]."
+		exit 1
+	fi
+}
+
+function test_assert_equals {
+	local esperado="$(echo -e "F\ntest_assert_equals: Esperava [1] mas obtive [2].")"
+	local obtido="$(assert_equals '1' '2' 2>&1)"
+	if [[ "${esperado}" == "${obtido}" ]]; then
+		echo -n '.'
+	else
+		echo -e "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
+		exit 1
+	fi
+	local esperado="."
+	local obtido="$(assert_equals '1' '1' 2>&1)"
+	if [[ "${esperado}" == "${obtido}" ]]; then
+		echo -n '.'
+	else
+		echo -e "F\n${FUNCNAME}: esperava a mensagem [${esperado}], mas obtive [${obtido}]."
+		exit 1
+	fi
+}
+
+
+test_setup
+test_teardown
+test_assert_equals
+
+echo -e '\nOK'
 exit 0
