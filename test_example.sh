@@ -1,5 +1,6 @@
 #!/bin/bash
 
+./installme
 . bunity
 
 function test_equals_ok {
@@ -15,6 +16,7 @@ function test_equals_nok {
 }
 
 setup
-test_equals_ok
-test_equals_nok
+test_equals_ok &
+test_equals_nok &
+wait
 teardown

@@ -1,19 +1,37 @@
-function setup {
+function save_the_path {
 	the_path="${PATH}"
 	export PATH="${PATH}:."
 }
 
-function teardown {
-	echo -e '\nOK'
+function restore_the_path {
 	export PATH="${the_path}"
+}
+
+function setup {
+	bunity_errors="/tmp/$(basename $0)-$$.tmp"
+	local exit_scriptlet="rm -f ${bunity_errors}"
+	save_the_path
+	exit_scriptlet="restore_the_path; ${exit_scriptlet}"
+	trap "${exit_scriptlet}" EXIT
+}
+
+function teardown {
+	restore_the_path
+	if [[ ! -f "${bunity_errors}" ]]; then
+		echo -e '\nOK'
+	else
+		echo
+		cat "${bunity_errors}"
+	fi
+	rm -f ${bunity_errors}
 }
 
 function assert_equals {
 	if [[ "$1" == "$2" ]]; then
 		echo -n '.'
 	else
+		echo -n 'F'
 		local who_called_me="${FUNCNAME[1]}"
-		echo -e "F\n${who_called_me}: expected [$1], but got [$2]."
-		exit 1
+		echo "${who_called_me}: expected [$1], but got [$2]." >> "${bunity_errors}"
 	fi
 }
