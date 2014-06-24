@@ -8,7 +8,7 @@ function restore_the_path {
 }
 
 function setup {
-	bunity_errors="/tmp/$(basename $0)-$$.tmp"
+	bunity_errors="$(mktemp)"
 	local exit_scriptlet="rm -f ${bunity_errors}"
 	save_the_path
 	exit_scriptlet="restore_the_path; ${exit_scriptlet}"
