@@ -17,11 +17,11 @@ function setup {
 
 function teardown {
 	restore_the_path
-	if [[ ! -f "${bunity_errors}" ]]; then
-		echo -e '\nOK'
-	else
+	if [[ -f "${bunity_errors}" ]] && [[ -n "$(cat ${bunity_errors})" ]]; then
 		echo
 		cat "${bunity_errors}"
+	else
+		echo -e '\nOK'
 	fi
 	rm -f ${bunity_errors}
 }
